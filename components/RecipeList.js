@@ -4,16 +4,23 @@ import { Text } from "react-native";
 
 import { ENDPOINTS } from "../resources/endpoints";
 
-const RecipeList = () => {
+const RecipeList = props => {
+  const token = props.token;
   React.useEffect(() => {
-    Axios.get(ENDPOINTS.recipes)
-      .then(response => {
-        console.log(response.data._embedded.recipes);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
+    if (token !== "") {
+      console.log(token);
+      const config = {
+        headers: { Authorization: "Bearer " + token }
+      };
+      Axios.get(ENDPOINTS.recipes, config)
+        .then(response => {
+          console.log(response.data._embedded.recipes);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }, [token]);
 
   return <Text>Coming soon...</Text>;
 };

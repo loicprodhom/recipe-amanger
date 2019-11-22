@@ -1,4 +1,5 @@
 export const ENDPOINTS = {
-  recipes: "http://prodhom-megusta.herokuapp.com/recipes",
-  ingredients: "http://prodhom-megusta.herokuapp.com/ingredients"
+  token: "http://prodhom-megusta.herokuapp.com/token",
+  recipes: "http://prodhom-megusta.herokuapp.com/api/recipes",
+  ingredients: "http://prodhom-megusta.herokuapp.com/api/ingredients"
 };
