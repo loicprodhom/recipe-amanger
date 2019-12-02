@@ -9,9 +9,11 @@ const RecipeList = props => {
   React.useEffect(() => {
     if (token !== "") {
       console.log(token);
+
       const config = {
         headers: { Authorization: "Bearer " + token }
       };
+
       Axios.get(ENDPOINTS.recipes, config)
         .then(response => {
           console.log(response.data._embedded.recipes);
