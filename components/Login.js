@@ -39,7 +39,7 @@ const Login = props => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, justifyContent: "center" }}
+      style={{ flex: 1, justifyContent: "center", width: "50%" }}
       behavior="padding"
     >
       <Overlay
@@ -60,8 +60,15 @@ const Login = props => {
         </View>
       </Overlay>
       <View style={{ flex: 1 }}></View>
-      <Text h2>Login</Text>
-      <View style={{ flex: 1, justifyContent: "space-around" }}>
+
+      <View
+        style={{
+          flex: 2,
+          justifyContent: "space-around",
+          alignItems: "center"
+        }}
+      >
+        <Text h2>Login</Text>
         <Input
           placeholder="Username"
           value={user.username}
