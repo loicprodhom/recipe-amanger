@@ -16,14 +16,16 @@ const RecipeDetails = props => {
           <Text h4>{recipe.name}</Text>
         </View>
         <View style={{ flex: 9 }}>
-          {recipe._links === undefined ? (
+          {recipe.ingredients === undefined ? (
             <View></View>
           ) : (
-            recipe._links.containses.map((content, i) => {
+            recipe.ingredients.map((content, i) => {
               return (
                 <ListItem
                   key={i}
-                  title={`${content.quantity} ${content.unit} of ${content.ingredient}`}
+                  title={`${content.quantity} ${
+                    content.unit === "" ? "" : `${content.unit} of`
+                  } ${content.ingredient}`}
                 />
               );
             })

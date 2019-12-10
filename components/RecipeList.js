@@ -23,12 +23,49 @@ const RecipeList = props => {
       const config = {
         headers: { Authorization: "Bearer " + token }
       };
+      let list = [];
 
+      //Fetch recipes
       Axios.get(ENDPOINTS.recipes, config)
         .then(response => {
-          //console.log(response.data._embedded.recipes);
-          setRecipeList(recipes);
-          console.log(recipes);
+          //Set recipes
+          list = response.data._embedded.recipes;
+          //For each recipe
+          list.forEach(item => {
+            //Fetch contents
+            Axios.get(item._links.ingredients.href, config)
+              .then(response => {
+                //Set contents
+                item.ingredients = response.data._embedded.containses;
+                //For each content
+                item.ingredients.forEach(content => {
+                  //Fetch the ingredient
+                  Axios.get(content._links.ingredient.href, config)
+                    .then(response => {
+                      //Set the ingredient
+                      content.ingredient = response.data.name;
+                      //Fetch the unit
+                      Axios.get(content._links.unit.href, config)
+                        .then(response => {
+                          //Set the unit
+                          content.unit = response.data.abbreviation;
+                          setRecipeList([...list]);
+                        })
+                        .catch(error => {
+                          console.log(error);
+                        });
+                    })
+                    .catch(error => {
+                      console.log(error);
+                    });
+                });
+              })
+              .catch(error => {
+                console.log;
+              });
+          });
+          //console.log(list);
+          //setRecipeList(list);
         })
         .catch(error => {
           console.log(error);
