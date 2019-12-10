@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, KeyboardAvoidingView } from "react-native";
 import { Button, Input, Text, Overlay } from "react-native-elements";
 import * as qs from "query-string";
 import Axios from "axios";
@@ -38,7 +38,10 @@ const Login = props => {
   };
 
   return (
-    <View>
+    <KeyboardAvoidingView
+      style={{ flex: 1, justifyContent: "center" }}
+      behavior="padding"
+    >
       <Overlay
         isVisible={error}
         onBackdropPress={() => {
@@ -56,8 +59,9 @@ const Login = props => {
           />
         </View>
       </Overlay>
+      <View style={{ flex: 1 }}></View>
       <Text h2>Login</Text>
-      <View>
+      <View style={{ flex: 1, justifyContent: "space-around" }}>
         <Input
           placeholder="Username"
           value={user.username}
@@ -75,9 +79,10 @@ const Login = props => {
           secureTextEntry={true}
           autoCapitalize="none"
         />
+        <Button title="SIGN IN" onPress={authenticate} type="solid" />
       </View>
-      <Button title="SIGN IN" onPress={authenticate} type="solid" />
-    </View>
+      <View style={{ flex: 1 }}></View>
+    </KeyboardAvoidingView>
   );
 };
 
