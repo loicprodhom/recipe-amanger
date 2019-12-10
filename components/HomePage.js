@@ -21,7 +21,7 @@ const HomePage = props => {
             <Icon
               name="cancel"
               onPress={() => {
-                setDialogVisible(true);
+                setSignoutWarningVisible(true);
               }}
             />
           }
