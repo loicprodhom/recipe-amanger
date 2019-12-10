@@ -1,7 +1,7 @@
 import React from "react";
 import Axios from "axios";
 import { Text, View } from "react-native";
-import { ListItem } from "react-native-elements";
+import { ListItem, Divider } from "react-native-elements";
 import { recipes } from "../temp/tempdata";
 
 import { ENDPOINTS } from "../resources/endpoints";
@@ -18,8 +18,6 @@ const RecipeList = props => {
 
   React.useEffect(() => {
     if (token !== "" && token !== undefined) {
-      console.log(token);
-
       const config = {
         headers: { Authorization: "Bearer " + token }
       };
@@ -85,6 +83,7 @@ const RecipeList = props => {
               //navigate("Details", { recipe: recipe });
               setOverlay({ visible: true, recipe: recipe });
             }}
+            bottomDivider
           />
         );
       })}

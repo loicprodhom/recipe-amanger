@@ -1,16 +1,21 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { Icon, Header, Overlay, Button } from "react-native-elements";
+import { Icon, Header, Overlay, Button, Divider } from "react-native-elements";
 import RecipeList from "./RecipeList";
+import AddRecipe from "./AddRecipe";
 
 const HomePage = props => {
   const token = props.authToken;
 
-  const [dialogVisible, setDialogVisible] = React.useState(false);
+  const [signoutWarningVisible, setSignoutWarningVisible] = React.useState(
+    false
+  );
+
+  const [currView, setCurrView] = React.useState("List");
 
   return (
     <View style={{ flex: 1, width: "100%" }}>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 2 }}>
         <Header
           rightComponent={
             <Icon
@@ -22,13 +27,35 @@ const HomePage = props => {
           }
         />
       </View>
-      <View style={{ flex: 9 }}>
-        <RecipeList token={token} />
+      <View style={{ flex: 12 }}>
+        {currView === "List" ? <RecipeList token={token} /> : <AddRecipe />}
+      </View>
+      <Divider style={{ backgroundColor: "white" }} />
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "flex-end"
+        }}
+      >
+        <Button
+          title="Recipes"
+          onPress={() => {
+            setCurrView("List");
+          }}
+        />
+        <Button
+          title="Add a Recipe"
+          onPress={() => {
+            setCurrView("Add");
+          }}
+        />
       </View>
       <Overlay
-        isVisible={dialogVisible}
+        isVisible={signoutWarningVisible}
         onBackdropPress={() => {
-          setDialogVisible(false);
+          setSignoutWarningVisible(false);
         }}
         height="30%"
       >
@@ -42,7 +69,7 @@ const HomePage = props => {
             <Button
               title="Yes"
               onPress={() => {
-                setDialogVisible(false);
+                setSignoutWarningVisible(false);
                 props.setAuthToken("");
               }}
               type="solid"
@@ -50,7 +77,7 @@ const HomePage = props => {
             <Button
               title="No"
               onPress={() => {
-                setDialogVisible(false);
+                setSignoutWarningVisible(false);
               }}
               type="solid"
             />

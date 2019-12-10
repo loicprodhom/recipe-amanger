@@ -19,13 +19,10 @@ const Login = props => {
       }
     };
 
-    console.log(user);
-
     const requestBody = user;
 
     Axios.post(ENDPOINTS.token, qs.stringify(requestBody), config)
       .then(response => {
-        console.log(response.data);
         if (response.data === "no token found") {
           setError(true);
         } else {
