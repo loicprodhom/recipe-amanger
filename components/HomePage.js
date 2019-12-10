@@ -28,7 +28,11 @@ const HomePage = props => {
         />
       </View>
       <View style={{ flex: 12 }}>
-        {currView === "List" ? <RecipeList token={token} /> : <AddRecipe />}
+        {currView === "List" ? (
+          <RecipeList token={token} />
+        ) : (
+          <AddRecipe token={token} />
+        )}
       </View>
       <Divider style={{ backgroundColor: "white" }} />
       <View

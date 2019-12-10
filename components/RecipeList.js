@@ -1,6 +1,6 @@
 import React from "react";
 import Axios from "axios";
-import { Text, View } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import { ListItem, Divider } from "react-native-elements";
 import { recipes } from "../temp/tempdata";
 
@@ -72,7 +72,7 @@ const RecipeList = props => {
   }, [token]);
 
   return (
-    <View style={{ flex: 1, width: "100%" }}>
+    <ScrollView style={{ flex: 1, width: "100%" }}>
       {recipeList.map((recipe, i) => {
         return (
           <ListItem
@@ -92,7 +92,7 @@ const RecipeList = props => {
         recipe={overlay.recipe}
         setOverlay={setOverlay}
       />
-    </View>
+    </ScrollView>
   );
 };
 

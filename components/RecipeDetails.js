@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { Overlay, Text, ListItem } from "react-native-elements";
 
 const RecipeDetails = props => {
@@ -11,7 +11,7 @@ const RecipeDetails = props => {
 
   return (
     <Overlay isVisible={props.visible} onBackdropPress={closeOverlay}>
-      <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
           <Text h4>{recipe.name}</Text>
         </View>
@@ -31,7 +31,7 @@ const RecipeDetails = props => {
             })
           )}
         </View>
-      </View>
+      </ScrollView>
     </Overlay>
   );
 };
