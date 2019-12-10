@@ -9,7 +9,7 @@ const Login = props => {
   const authToken = props.authToken;
   const setAuthToken = props.setAuthToken;
   const [user, setUser] = React.useState({ username: "", password: "" });
-  4;
+
   const [error, setError] = React.useState(false);
 
   const authenticate = () => {

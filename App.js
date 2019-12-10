@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import HomePage from "./components/HomePage";
 
 export default function App() {
+  console.disableYellowBox = true;
   const [authToken, setAuthToken] = React.useState("");
 
   React.useEffect(() => {}, [authToken]);
