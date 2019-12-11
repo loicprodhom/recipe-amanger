@@ -30,13 +30,11 @@ const AddRecipe = props => {
     Axios.post(ENDPOINTS.recipes, recipe, config)
       .then(response => response.data)
       .then(response => {
-        console.log(response);
         let tempContents = recipe.contents;
         tempContents.forEach(item => {
           item.payload.recipe = response._links.self.href;
           Axios.post(ENDPOINTS.recipecontents, item.payload, config)
             .then(response => {
-              console.log(response);
               props.setCurrView("List");
             })
             .catch(error => {
@@ -78,14 +76,14 @@ const AddRecipe = props => {
       </View>
       <View style={{ flex: 1 }}>
         <Input
-          placeholder="Search"
+          placeholder="Search ingredients..."
           value={search}
           onChangeText={text => {
             setSearch(text);
           }}
         />
       </View>
-      <ScrollView style={{ flex: 8 }}>
+      <ScrollView style={{ height: "35%" /*flex: 8*/ }}>
         {ingredients
           .filter(item => {
             return item.name.toLowerCase().includes(search.toLowerCase());
@@ -104,14 +102,14 @@ const AddRecipe = props => {
             );
           })}
       </ScrollView>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ height: "35%" /*flex: 3*/ }}>
         {recipe.contents.map((item, i) => {
           return (
             <ListItem
               key={i}
-              title={`${item.quantity} ${item.ingredient} ${
+              title={`- ${item.quantity}${
                 item.unit === "" ? "" : `${item.unit}`
-              }`}
+              } ${item.ingredient} `}
               bottomDivider
               onLongPress={() => {
                 let tempContents = recipe.contents;
