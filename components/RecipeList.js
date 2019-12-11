@@ -6,6 +6,7 @@ import { recipes } from "../temp/tempdata";
 
 import { ENDPOINTS } from "../resources/endpoints";
 import RecipeDetails from "./RecipeDetails";
+import WarningScreen from "./WarningScreen";
 
 const RecipeList = props => {
   const token = props.token;
@@ -15,61 +16,69 @@ const RecipeList = props => {
     visible: false,
     recipe: {}
   });
+  const [warning, setWarning] = React.useState({
+    visible: false,
+    recipe: {}
+  });
 
   React.useEffect(() => {
     if (token !== "" && token !== undefined) {
-      const config = {
-        headers: { Authorization: "Bearer " + token }
-      };
-      let list = [];
-
-      //Fetch recipes
-      Axios.get(ENDPOINTS.recipes, config)
-        .then(response => {
-          //Set recipes
-          list = response.data._embedded.recipes;
-          //For each recipe
-          list.forEach(item => {
-            //Fetch contents
-            Axios.get(item._links.ingredients.href, config)
-              .then(response => {
-                //Set contents
-                item.ingredients = response.data._embedded.containses;
-                //For each content
-                item.ingredients.forEach(content => {
-                  //Fetch the ingredient
-                  Axios.get(content._links.ingredient.href, config)
-                    .then(response => {
-                      //Set the ingredient
-                      content.ingredient = response.data.name;
-                      //Fetch the unit
-                      Axios.get(content._links.unit.href, config)
-                        .then(response => {
-                          //Set the unit
-                          content.unit = response.data.abbreviation;
-                          setRecipeList([...list]);
-                        })
-                        .catch(error => {
-                          console.log(error);
-                        });
-                    })
-                    .catch(error => {
-                      console.log(error);
-                    });
-                });
-              })
-              .catch(error => {
-                console.log;
-              });
-          });
-          //console.log(list);
-          //setRecipeList(list);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      fetchRecipes();
     }
   }, [token]);
+
+  const fetchRecipes = () => {
+    const config = {
+      headers: { Authorization: "Bearer " + token }
+    };
+    let list = [];
+
+    //Fetch recipes
+    Axios.get(ENDPOINTS.recipes, config)
+      .then(response => {
+        //Set recipes
+        list = response.data._embedded.recipes;
+        //For each recipe
+        list.forEach(item => {
+          //Fetch contents
+          Axios.get(item._links.ingredients.href, config)
+            .then(response => {
+              //Set contents
+              item.ingredients = response.data._embedded.containses;
+              //For each content
+              item.ingredients.forEach(content => {
+                //Fetch the ingredient
+                Axios.get(content._links.ingredient.href, config)
+                  .then(response => {
+                    //Set the ingredient
+                    content.ingredient = response.data.name;
+                    //Fetch the unit
+                    Axios.get(content._links.unit.href, config)
+                      .then(response => {
+                        //Set the unit
+                        content.unit = response.data.abbreviation;
+                        setRecipeList([...list]);
+                      })
+                      .catch(error => {
+                        console.log(error);
+                      });
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  });
+              });
+            })
+            .catch(error => {
+              console.log;
+            });
+        });
+        //console.log(list);
+        //setRecipeList(list);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   return (
     <ScrollView style={{ flex: 1, width: "100%" }}>
@@ -80,8 +89,10 @@ const RecipeList = props => {
             title={recipe.name}
             chevron
             onPress={() => {
-              //navigate("Details", { recipe: recipe });
               setOverlay({ visible: true, recipe: recipe });
+            }}
+            onLongPress={() => {
+              setWarning({ visible: true, recipe: recipe });
             }}
             bottomDivider
           />
@@ -91,6 +102,13 @@ const RecipeList = props => {
         visible={overlay.visible}
         recipe={overlay.recipe}
         setOverlay={setOverlay}
+      />
+      <WarningScreen
+        visible={warning.visible}
+        recipe={warning.recipe}
+        setWarning={setWarning}
+        token={token}
+        fetchRecipes={fetchRecipes}
       />
     </ScrollView>
   );

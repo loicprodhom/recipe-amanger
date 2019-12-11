@@ -3,12 +3,51 @@ import { View, Text, ScrollView } from "react-native";
 import { Button, Input, ListItem } from "react-native-elements";
 import Axios from "axios";
 import { ENDPOINTS } from "../resources/endpoints";
+import AddContent from "./AddContent";
 
 const AddRecipe = props => {
   const token = props.token;
   const [recipe, setRecipe] = useState({ name: "", contents: [] });
   const [ingredients, setIngredients] = useState([]);
   const [search, setSearch] = useState("");
+  const [contentForm, setContentForm] = useState({
+    open: false,
+    ingredient: {}
+  });
+
+  const addIngredient = content => {
+    setRecipe({ ...recipe, contents: [...recipe.contents, content] });
+  };
+
+  const closeAddContent = () => {
+    setContentForm({ open: false, ingredient: {} });
+  };
+
+  const saveRecipe = () => {
+    const config = {
+      headers: { Authorization: "Bearer " + token }
+    };
+    Axios.post(ENDPOINTS.recipes, recipe, config)
+      .then(response => response.data)
+      .then(response => {
+        console.log(response);
+        let tempContents = recipe.contents;
+        tempContents.forEach(item => {
+          item.payload.recipe = response._links.self.href;
+          Axios.post(ENDPOINTS.recipecontents, item.payload, config)
+            .then(response => {
+              console.log(response);
+              props.setCurrView("List");
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   React.useEffect(() => {
     if (token !== "" && token !== undefined) {
@@ -47,18 +86,51 @@ const AddRecipe = props => {
         />
       </View>
       <ScrollView style={{ flex: 8 }}>
-        {ingredients.map((ingredient, i) => {
-          return (
-            <ListItem key={i} bottomDivider title={ingredient.name} chevron />
-          );
-        })}
+        {ingredients
+          .filter(item => {
+            return item.name.toLowerCase().includes(search.toLowerCase());
+          })
+          .map((ingredient, i) => {
+            return (
+              <ListItem
+                key={i}
+                bottomDivider
+                title={ingredient.name}
+                chevron
+                onPress={() => {
+                  setContentForm({ open: true, ingredient: ingredient });
+                }}
+              />
+            );
+          })}
       </ScrollView>
       <ScrollView style={{ flex: 1 }}>
         {recipe.contents.map((item, i) => {
-          return <ListItem key={i} title={item.name} bottomDivider />;
+          return (
+            <ListItem
+              key={i}
+              title={`${item.quantity} ${item.ingredient} ${
+                item.unit === "" ? "" : `${item.unit}`
+              }`}
+              bottomDivider
+              onLongPress={() => {
+                let tempContents = recipe.contents;
+                tempContents.splice(i, 1);
+                setRecipe({ ...recipe, contents: tempContents });
+              }}
+            />
+          );
         })}
-        <Button title="Save" />
+        <Button title="Save" onPress={saveRecipe} />
       </ScrollView>
+      <AddContent
+        ingredient={contentForm.ingredient}
+        visible={contentForm.open}
+        setSearch={setSearch}
+        addIngredient={addIngredient}
+        closeAddContent={closeAddContent}
+        token={token}
+      />
     </View>
   );
 };

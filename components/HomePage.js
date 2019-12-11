@@ -31,7 +31,7 @@ const HomePage = props => {
         {currView === "List" ? (
           <RecipeList token={token} />
         ) : (
-          <AddRecipe token={token} />
+          <AddRecipe setCurrView={setCurrView} token={token} />
         )}
       </View>
       <Divider style={{ backgroundColor: "white" }} />
